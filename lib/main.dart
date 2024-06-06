@@ -280,139 +280,139 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-        ),
-        body: Padding(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+      ),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-    child: Form(
-    key: _formKey,
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text(
-    'Create',
-    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
-    Text(
-    'New Task',
-    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
-    SizedBox(height: 16),
-    TextFormField(
-    initialValue: _taskName,
-    decoration: InputDecoration(
-    labelText: 'Task name',
-    ),
-    onSaved: (value) => _taskName = value ?? '',
-    validator: (value) {
-    if (value == null || value.isEmpty) {
-    return 'Please enter a task name';
-    }
-    return null;
-    },
-    ),
-    SizedBox(height: 60),
-    Container(
-    width: double.infinity,
-    height: 400,
-    child: Card(
-    child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-    children: [
-    TextFormField(
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'Date',
-        suffixIcon: IconButton(
-          icon: Icon(Icons.calendar_today),
-          onPressed: () => _selectDate(context),
-        ),
-      ),
-      controller: TextEditingController(
-        text: _selectedDate == null
-            ? ''
-            : _selectedDate!.toString().split(' ')[0],
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a date';
-        }
-        return null;
-      },
-    ),
-      SizedBox(height: 16),
-      TextFormField(
-        readOnly: true,
-        decoration: InputDecoration(
-          labelText: 'Time',
-          suffixIcon: IconButton(
-            icon: Icon(Icons.access_time),
-            onPressed: () => _selectTime(context),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Create',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'New Task',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                initialValue: _taskName,
+                decoration: InputDecoration(
+                  labelText: 'Task name',
+                ),
+                onSaved: (value) => _taskName = value ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a task name';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 60),
+              Container(
+                width: double.infinity,
+                height: 400,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: 'Date',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.calendar_today),
+                              onPressed: () => _selectDate(context),
+                            ),
+                          ),
+                          controller: TextEditingController(
+                            text: _selectedDate == null
+                                ? ''
+                                : _selectedDate!.toString().split(' ')[0],
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a date';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: 'Time',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.access_time),
+                              onPressed: () => _selectTime(context),
+                            ),
+                          ),
+                          controller: TextEditingController(
+                            text: _selectedTime?.format(context) ?? '',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a time';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Remind me'),
+                            Switch(
+                              value: _remindMe,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _remindMe = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 130),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              _formKey.currentState?.save();
+                              widget.onCreate(Task(
+                                name: _taskName,
+                                date: _selectedDate?.toString().split(' ')[0] ?? '',
+                                time: _selectedTime?.format(context) ?? '',
+                                isCompleted: _remindMe,
+                              ));
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Text(
+                            widget.existingTask == null ? '+ Create Task' : 'Save Changes',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white, // Set text color to white
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple, // Set button background color to purple
+                            minimumSize: Size(double.infinity, 60),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        controller: TextEditingController(
-          text: _selectedTime?.format(context) ?? '',
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a time';
-          }
-          return null;
-        },
       ),
-      SizedBox(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Remind me'),
-          Switch(
-            value: _remindMe,
-            onChanged: (bool value) {
-              setState(() {
-                _remindMe = value;
-              });
-            },
-          ),
-        ],
-      ),
-      SizedBox(height: 130),
-      ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState?.validate() ?? false) {
-            _formKey.currentState?.save();
-            widget.onCreate(Task(
-              name: _taskName,
-              date: _selectedDate?.toString().split(' ')[0] ?? '',
-              time: _selectedTime?.format(context) ?? '',
-              isCompleted: _remindMe,
-            ));
-            Navigator.pop(context);
-          }
-        },
-        child: Text(
-          widget.existingTask == null ? '+ Create Task' : 'Save Changes',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.white, // Set text color to white
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple, // Set button background color to purple
-          minimumSize: Size(double.infinity, 60),
-        ),
-      ),
-    ],
-    ),
-    ),
-    ),
-    ),
-    ],
-    ),
-    ),
-        ),
     );
   }
 }
